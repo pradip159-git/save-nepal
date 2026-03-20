@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Issue | Save Nepal From Corruption</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span style="font-size:32px;">🇳🇵</span>
+      <div class="nav-logo-text"><span class="np" style="color:var(--crimson);font-weight:900;">भ्रष्टाचार मुक्त नेपाल</span><span class="en" style="font-weight:900;">Save Nepal From Corruption</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="complaint.html">📝 Submit Issue</a></li>
+      <li><a href="track.html" class="active">🔍 Track Issue</a></li>
+      <li><a href="donate.html">💛 Donate</a></li>
+      <li><a href="admin.html" class="btn-nav">🔒 Admin</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container" style="max-width:600px;">
+    <div class="section-header">
+      <h1 class="section-title">🔍 Track Your Complaint</h1>
+      <p class="section-subtitle">Enter your Complaint ID to check current status</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group">
+          <label class="form-label">Complaint ID <span style="color:var(--crimson)">*</span></label>
+          <input type="text" class="form-control" id="track-id" placeholder="e.g. NCP-A1B2C3D4" style="font-family:'Courier New',monospace;font-size:16px;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')track()">
+        </div>
+        <button class="btn btn-primary" onclick="track()" id="track-btn" style="width:100%">🔍 Check Status</button>
+        <div id="track-error" class="alert alert-danger" style="display:none;margin-top:16px;">❌ Complaint not found. Please check your ID and try again.</div>
+      </div>
+    </div>
+
+    <div class="card" id="result-card" style="display:none;margin-top:20px;">
+      <div class="card-header">
+        <div class="card-icon blue">📋</div>
+        <div>
+          <h3 id="r-title" style="font-size:16px;font-weight:700;">—</h3>
+          <p id="r-id" style="font-size:12px;color:var(--text-muted);font-family:'Courier New',monospace;">—</p>
+        </div>
+        <div style="margin-left:auto" id="r-badge"></div>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">CATEGORY</div>
+            <div id="r-cat" style="font-weight:600;">—</div>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">SUBMITTED</div>
+            <div id="r-date">—</div>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">PROVINCE</div>
+            <div id="r-province">—</div>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">DISTRICT / WARD</div>
+            <div id="r-loc">—</div>
+          </div>
+        </div>
+
+        <!-- Status timeline -->
+        <div style="margin-top:28px;">
+          <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;">Status Timeline</div>
+          <div id="timeline"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+async function track() {
+  const id = document.getElementById('track-id').value.trim();
+  if (!id) { alert('Please enter a Complaint ID.'); return; }
+  const btn = document.getElementById('track-btn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Searching...';
+  document.getElementById('track-error').style.display = 'none';
+  document.getElementById('result-card').style.display = 'none';
+  try {
+    const res = await fetch('/api/check-status/' + encodeURIComponent(id));
+    if (res.status === 404) {
+      document.getElementById('track-error').style.display = 'flex';
+    } else {
+      const c = await res.json();
+      document.getElementById('r-id').textContent = c.id;
+      document.getElementById('r-title').textContent = c.title || 'Civic Complaint';
+      document.getElementById('r-cat').textContent = c.category || '—';
+      document.getElementById('r-date').textContent = new Date(c.timestamp).toLocaleDateString('en-NP', { year:'numeric', month:'long', day:'numeric' });
+      document.getElementById('r-province').textContent = c.location?.province || '—';
+      document.getElementById('r-loc').textContent = (c.location?.district || '—') + ' / ' + (c.location?.ward || '—');
+      const statusMap = { 'Pending': 'badge-pending', 'In Progress': 'badge-progress', 'Resolved': 'badge-resolved', 'Rejected': 'badge-rejected' };
+      document.getElementById('r-badge').innerHTML = `<span class="badge ${statusMap[c.status]||'badge-pending'}">${c.status}</span>`;
+      renderTimeline(c.status);
+      document.getElementById('result-card').style.display = 'block';
+    }
+  } catch(e) {
+    alert('Cannot connect to server. Make sure server is running.');
+  }
+  btn.disabled = false; btn.innerHTML = '🔍 Check Status';
+}
+
+function renderTimeline(status) {
+  const steps = [
+    { key: 'Submitted', icon: '📥', desc: 'Complaint received by the system' },
+    { key: 'Pending', icon: '⏳', desc: 'Awaiting review by authorities' },
+    { key: 'In Progress', icon: '🔧', desc: 'Issue is being investigated or actioned' },
+    { key: 'Resolved', icon: '✅', desc: 'Issue has been resolved' }
+  ];
+  const order = ['Submitted', 'Pending', 'In Progress', 'Resolved'];
+  const rejected = status === 'Rejected';
+  const currentIdx = rejected ? 2 : order.indexOf(status);
+  document.getElementById('timeline').innerHTML = steps.map((s, i) => {
+    let state = i <= currentIdx ? 'done' : 'future';
+    if (i === currentIdx && !rejected) state = 'current';
+    const colors = { done: 'var(--success)', current: 'var(--blue)', future: 'var(--border)' };
+    return `<div style="display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;">
+      <div style="width:32px;height:32px;border-radius:50%;background:${colors[state]};color:white;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${state==='done'?'✓':s.icon}</div>
+      <div style="flex:1;padding-top:4px;">
+        <div style="font-weight:700;font-size:14px;color:${state==='future'?'var(--text-muted)':'var(--text)'}">${s.key}</div>
+        <div style="font-size:12px;color:var(--text-muted)">${s.desc}</div>
+      </div>
+    </div>`;
+  }).join('') + (rejected ? `<div style="display:flex;gap:12px;align-items:flex-start;">
+    <div style="width:32px;height:32px;border-radius:50%;background:var(--danger);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">✕</div>
+    <div style="flex:1;padding-top:4px;"><div style="font-weight:700;font-size:14px;">Rejected</div><div style="font-size:12px;color:var(--text-muted)">Complaint was reviewed and rejected</div></div></div>` : '');
+}
+
+// Pre-fill from URL
+const p = new URLSearchParams(location.search);
+if (p.get('id')) { document.getElementById('track-id').value = p.get('id'); track(); }
+</script>
+</body>
+</html>

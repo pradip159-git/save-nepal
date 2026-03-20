@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /data/
+Disallow: /admin.html
+Disallow: /*?cat=*
+
+Sitemap: https://www.savenepalfromcorruption.com/sitemap.xml

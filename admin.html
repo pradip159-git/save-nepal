@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Save Nepal From Corruption</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
+  <style>
+    #login-screen { max-width: 420px; margin: 80px auto; }
+    #dashboard-screen { display: none; }
+    .detail-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key { font-weight: 600; min-width: 140px; color: var(--text-muted); }
+    .detail-val { color: var(--text); flex: 1; }
+    .att-link { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--blue); font-size: 13px; font-weight: 500; margin: 3px; transition: var(--transition); }
+    .att-link:hover { background: rgba(0,56,147,0.08); }
+    .no-data { text-align: center; padding: 60px 24px; color: var(--text-muted); }
+    .no-data .icon { font-size: 48px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span style="font-size:32px;">🇳🇵</span>
+      <div class="nav-logo-text"><span class="np" style="color:var(--crimson);font-weight:900;">भ्रष्टाचार मुक्त नेपाल</span><span class="en" style="font-weight:900;">Save Nepal From Corruption</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="complaint.html">📝 Submit Issue</a></li>
+      <li><a href="track.html">🔍 Track Issue</a></li>
+      <li><a href="donate.html">💛 Donate</a></li>
+      <li><a href="admin.html" class="btn-nav active">🔒 Admin</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- LOGIN SCREEN -->
+<section class="section" id="login-screen">
+  <div class="card" style="max-width:420px;margin:0 auto;">
+    <div class="card-header">
+      <div class="card-icon blue">🔒</div>
+      <div><h2 style="font-size:18px;font-weight:700;">Admin Login</h2><p style="font-size:13px;color:var(--text-muted);">Enter your admin password</p></div>
+    </div>
+    <div class="card-body">
+      <div id="login-error" class="alert alert-danger" style="display:none;margin-bottom:16px;">❌ Incorrect password. Please try again.</div>
+      <div class="form-group">
+        <label class="form-label">Admin Password</label>
+        <input type="password" id="admin-pwd" class="form-control" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="doLogin()">🔓 Login</button>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD SCREEN -->
+<section class="section" id="dashboard-screen">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1 class="section-title">📋 Admin Dashboard</h1>
+        <p class="section-subtitle">All submitted complaints — click a row to view details</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button class="btn btn-ghost btn-sm" onclick="loadComplaints()">🔄 Refresh</button>
+        <button class="btn btn-ghost btn-sm" onclick="doLogout()">🔒 Logout</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid-4" id="admin-stats" style="margin-bottom:24px;">
+      <div class="card" style="padding:20px;text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--text)" id="st-total">0</div>
+        <div style="font-size:12px;color:var(--text-muted);">Total Complaints</div>
+      </div>
+      <div class="card" style="padding:20px;text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--warning)" id="st-pending">0</div>
+        <div style="font-size:12px;color:var(--text-muted);">Pending</div>
+      </div>
+      <div class="card" style="padding:20px;text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--info)" id="st-progress">0</div>
+        <div style="font-size:12px;color:var(--text-muted);">In Progress</div>
+      </div>
+      <div class="card" style="padding:20px;text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--success)" id="st-resolved">0</div>
+        <div style="font-size:12px;color:var(--text-muted);">Resolved</div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="form-control" id="search-input" placeholder="Search by ID, title, name, district..." oninput="filterComplaints()">
+      </div>
+      <select class="form-control" id="filter-province" onchange="filterComplaints()" style="max-width:180px;">
+        <option value="">All Provinces</option>
+      </select>
+      <select class="form-control" id="filter-status" onchange="filterComplaints()" style="max-width:150px;">
+        <option value="">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+      <select class="form-control" id="filter-cat" onchange="filterComplaints()" style="max-width:160px;">
+        <option value="">All Categories</option>
+        <option>Infrastructure</option><option>Health</option><option>Education</option>
+        <option>Water</option><option>Electricity</option><option>Security</option>
+        <option>Environment</option><option>Corruption</option><option>Transportation</option>
+        <option>Agriculture</option><option>Other</option>
+      </select>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+      <div class="table-wrapper">
+        <table id="complaints-table">
+          <thead>
+            <tr>
+              <th>Complaint ID</th>
+              <th>Date</th>
+              <th>Reporter</th>
+              <th>Province</th>
+              <th>District/Ward</th>
+              <th>Category</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <tr><td colspan="9"><div class="no-data"><div class="icon">⏳</div><p>Loading complaints...</p></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <h3 id="modal-title">Complaint Details</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+    </div>
+  </div>
+</div>
+
+<script src="js/nepal-data.js"></script>
+<script>
+let adminPwd = '';
+let allComplaints = [];
+
+// Populate province filter
+const provFilter = document.getElementById('filter-province');
+Object.keys(NEPAL_DATA).forEach(p => {
+  const o = document.createElement('option');
+  o.value = p; o.textContent = p;
+  provFilter.appendChild(o);
+});
+
+function doLogin() {
+  const pwd = document.getElementById('admin-pwd').value;
+  adminPwd = pwd;
+  fetch('/api/complaints', { headers: { 'x-admin-password': pwd } })
+    .then(r => {
+      if (r.status === 401) {
+        document.getElementById('login-error').style.display = 'flex';
+        adminPwd = '';
+        return null;
+      }
+      return r.json();
+    })
+    .then(data => {
+      if (!data) return;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard-screen').style.display = 'block';
+      allComplaints = data;
+      renderTable(data);
+      updateStats(data);
+    })
+    .catch(() => alert('Cannot reach server. Run: node server.js'));
+}
+
+function doLogout() {
+  adminPwd = '';
+  allComplaints = [];
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('dashboard-screen').style.display = 'none';
+  document.getElementById('admin-pwd').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function loadComplaints() {
+  fetch('/api/complaints', { headers: { 'x-admin-password': adminPwd } })
+    .then(r => r.json())
+    .then(data => { allComplaints = data; filterComplaints(); updateStats(data); })
+    .catch(() => alert('Refresh failed'));
+}
+
+function updateStats(data) {
+  document.getElementById('st-total').textContent = data.length;
+  document.getElementById('st-pending').textContent = data.filter(c => c.status === 'Pending').length;
+  document.getElementById('st-progress').textContent = data.filter(c => c.status === 'In Progress').length;
+  document.getElementById('st-resolved').textContent = data.filter(c => c.status === 'Resolved').length;
+}
+
+function filterComplaints() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const prov = document.getElementById('filter-province').value;
+  const stat = document.getElementById('filter-status').value;
+  const cat = document.getElementById('filter-cat').value;
+  const filtered = allComplaints.filter(c => {
+    const matchQ = !q || c.id.toLowerCase().includes(q) || (c.title||'').toLowerCase().includes(q)
+      || (c.reporter?.name||'').toLowerCase().includes(q) || (c.location?.district||'').toLowerCase().includes(q);
+    const matchP = !prov || c.location?.province === prov;
+    const matchS = !stat || c.status === stat;
+    const matchC = !cat || c.category === cat;
+    return matchQ && matchP && matchS && matchC;
+  });
+  renderTable(filtered);
+}
+
+function statusBadge(s) {
+  const map = { 'Pending': 'badge-pending', 'In Progress': 'badge-progress', 'Resolved': 'badge-resolved', 'Rejected': 'badge-rejected' };
+  return `<span class="badge ${map[s]||'badge-pending'}">${s}</span>`;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('table-body');
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="no-data"><div class="icon">📭</div><p>No complaints found.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(c => {
+    const cats = Array.isArray(c.categories) ? c.categories : [c.category || '—'];
+    const catBadges = cats.slice(0, 2).map(cat => `<span style="font-size:11px;padding:2px 7px;background:rgba(186,12,47,0.08);color:var(--crimson-dark);border-radius:100px;white-space:nowrap;font-weight:600;">${cat}</span>`).join(' ');
+    const more = cats.length > 2 ? `<span style="font-size:11px;color:var(--text-muted)">+${cats.length - 2} more</span>` : '';
+    return `
+    <tr style="cursor:pointer" onclick="showDetail('${c.id}')">
+      <td><code style="font-size:12px;font-weight:700;color:var(--blue)">${c.id}</code></td>
+      <td>${new Date(c.timestamp).toLocaleDateString('en-NP')}</td>
+      <td>${c.reporter?.anonymous === 'Yes' ? '<em style="color:var(--text-muted)">Anonymous</em>' : (c.reporter?.name || 'Anon')}</td>
+      <td style="font-size:13px">${c.location?.province || '—'}</td>
+      <td style="font-size:13px">${c.location?.district || '—'} / ${c.location?.municipality || '—'} / ${c.location?.ward || '—'}</td>
+      <td style="max-width:180px">${catBadges} ${more}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${c.title}">${c.urgency === 'Critical' ? '🔴 ' : c.urgency === 'Urgent' ? '🟡 ' : ''}${c.title || '—'}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td onclick="event.stopPropagation()">
+        <select class="form-control" style="font-size:12px;padding:4px 8px;width:130px;" onchange="updateStatus('${c.id}', this.value)">
+          <option ${c.status==='Pending'?'selected':''}>Pending</option>
+          <option ${c.status==='In Progress'?'selected':''}>In Progress</option>
+          <option ${c.status==='Resolved'?'selected':''}>Resolved</option>
+          <option ${c.status==='Rejected'?'selected':''}>Rejected</option>
+        </select>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function updateStatus(id, status) {
+  await fetch(`/api/complaints/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPwd },
+    body: JSON.stringify({ status })
+  });
+  loadComplaints();
+}
+
+function showDetail(id) {
+  const c = allComplaints.find(x => x.id === id);
+  if (!c) return;
+  const cats = Array.isArray(c.categories) ? c.categories : [c.category || '—'];
+  const catBadgesHtml = cats.map(cat => `<span style="display:inline-block;background:rgba(186,12,47,0.08);color:var(--crimson-dark);padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600;margin:2px">${cat}</span>`).join('');
+  document.getElementById('modal-title').textContent = `Complaint: ${c.id}`;
+  const attHtml = c.attachments && c.attachments.length > 0
+    ? c.attachments.map(a => `<a class="att-link" href="/api/attachments/${c.id}/${a.saved}" target="_blank" download="${a.name}">📎 ${a.name}</a>`).join('')
+    : '<span style="color:var(--text-muted);font-size:13px;">No attachments</span>';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="detail-row"><span class="detail-key">Complaint ID</span><span class="detail-val"><code>${c.id}</code></span></div>
+    <div class="detail-row"><span class="detail-key">Submitted</span><span class="detail-val">${new Date(c.timestamp).toLocaleString()}</span></div>
+    <div class="detail-row"><span class="detail-key">Status</span><span class="detail-val">${statusBadge(c.status)}</span></div>
+    <div class="detail-row"><span class="detail-key">Urgency</span><span class="detail-val">${c.urgency === 'Critical' ? '🔴 Critical' : c.urgency === 'Urgent' ? '🟡 Urgent' : '🟢 Normal'}</span></div>
+    <div class="detail-row"><span class="detail-key">Categories</span><span class="detail-val">${catBadgesHtml}</span></div>
+    <div class="detail-row"><span class="detail-key">Province</span><span class="detail-val">${c.location?.province || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">District</span><span class="detail-val">${c.location?.district || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Municipality</span><span class="detail-val">${c.location?.municipality || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Ward</span><span class="detail-val">${c.location?.ward || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Tole</span><span class="detail-val">${c.location?.tole || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Exact Location</span><span class="detail-val">${c.location?.exactLocation || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Reporter</span><span class="detail-val">${c.reporter?.anonymous === 'Yes' ? '<em>Anonymous</em>' : (c.reporter?.name || '—')}</span></div>
+    <div class="detail-row"><span class="detail-key">Phone</span><span class="detail-val">${c.reporter?.phone || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Email</span><span class="detail-val">${c.reporter?.email || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Occupation</span><span class="detail-val">${c.reporter?.occupation || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Persons Involved</span><span class="detail-val" style="color:var(--crimson)">${c.personsInvolved || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Incident Date</span><span class="detail-val">${c.incidentDate || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Title</span><span class="detail-val" style="font-weight:700">${c.title || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Full Description</span><span class="detail-val" style="white-space:pre-wrap">${c.description || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Attachments</span><span class="detail-val">${attHtml}</span></div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+      <label class="form-label">Update Status</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        ${['Pending','In Progress','Resolved','Rejected'].map(s => `<button class="btn btn-sm ${c.status===s?'btn-primary':'btn-ghost'}" onclick="updateStatus('${c.id}','${s}');closeModal()">${s}</button>`).join('')}
+      </div>
+    </div>`;
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('detail-modal').classList.remove('open'); }
+document.getElementById('detail-modal').addEventListener('click', e => { if (e.target.id === 'detail-modal') closeModal(); });
+
+document.getElementById('admin-pwd').focus();
+</script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save Nepal From Corruption | भ्रष्टाचार मुक्त नेपाल</title>
+  <meta name="description" content="Official Save Nepal From Corruption portal - Citizens can report issues, track complaints and participate in governance across all 7 Provinces and 77 Districts.">
+  <meta name="keywords" content="Nepal, Corruption, Anti-Corruption, Report Corruption Nepal, Save Nepal from Corruption, Civic Issues, Municipality, Infrastructure">
+  <meta property="og:title" content="Save Nepal From Corruption">
+  <meta property="og:description" content="Securely report financial corruption, smuggling, misuse of power, and illegal activities in Nepal anonymously.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.savenepalfromcorruption.com">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇵</text></svg>">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span style="font-size:32px;">🇳🇵</span>
+      <div class="nav-logo-text">
+        <span class="np" style="color:var(--crimson);font-weight:900;">भ्रष्टाचार मुक्त नेपाल</span>
+        <span class="en" style="font-weight:900;">Save Nepal From Corruption</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">🏠 Home</a></li>
+      <li><a href="complaint.html">📝 Submit Issue</a></li>
+      <li><a href="track.html">🔍 Track Issue</a></li>
+      <li><a href="donate.html">💛 Donate</a></li>
+      <li><a href="admin.html" class="btn-nav">🔒 Admin</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge" style="background:rgba(220,38,38,0.15);color:#fee2e2;border:1px solid rgba(220,38,38,0.3);">🇳🇵 Save Nepal From Corruption — Citizen Reporting Portal</div>
+  <span class="hero-nepali" style="color:var(--crimson);text-shadow:0 2px 10px rgba(0,0,0,0.5);">भ्रष्टाचार मुक्त नेपाल अभियान</span>
+  <h1>Save Nepal From Corruption</h1>
+  <p>Report financial corruption, smuggling, misuse of power, and illegal activities directly and securely. Only together can we clean our nation.</p>
+  <div class="hero-actions">
+    <a href="complaint.html" class="btn btn-white" style="color:var(--crimson);">🚨 Report Corruption</a>
+    <a href="track.html" class="btn" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);backdrop-filter:blur(8px)">🔍 Track My Issue</a>
+    <a href="donate.html" class="btn" style="background:var(--gold);color:#333">💛 Donate</a>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">7</div>
+      <div class="stat-label">Provinces</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">77</div>
+      <div class="stat-label">Districts</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">753</div>
+      <div class="stat-label">Local Bodies</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="total-complaints">0</div>
+      <div class="stat-label">Issues Filed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="resolved-complaints">0</div>
+      <div class="stat-label">Resolved</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">Three simple steps to get your issue addressed</p>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="text-align:center;padding:32px 24px;">
+        <div style="font-size:48px;margin-bottom:16px;">📍</div>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:10px;">1. Select Your Location</h3>
+        <p style="color:var(--text-muted);font-size:14px;">Choose your Province, District, Ward and Tole from Nepal's full administrative hierarchy.</p>
+      </div>
+      <div class="card" style="text-align:center;padding:32px 24px;">
+        <div style="font-size:48px;margin-bottom:16px;">📝</div>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:10px;">2. Describe the Issue</h3>
+        <p style="color:var(--text-muted);font-size:14px;">Explain the problem clearly. Attach photos, audio recordings, or documents as evidence.</p>
+      </div>
+      <div class="card" style="text-align:center;padding:32px 24px;">
+        <div style="font-size:48px;margin-bottom:16px;">✅</div>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:10px;">3. Track Resolution</h3>
+        <p style="color:var(--text-muted);font-size:14px;">Receive a unique Complaint ID. Track your issue status from Pending to Resolved.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROVINCES -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">🗺️ Nepal's 7 Provinces</h2>
+      <p class="section-subtitle">Select your province to submit an issue</p>
+    </div>
+    <div class="grid-4" id="province-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ISSUE CATEGORIES -->
+<section class="section" style="background:var(--surface);padding:48px 24px;">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Issue Categories</h2>
+      <p class="section-subtitle">Select one or multiple categories — 30+ types available. Click any to start your complaint.</p>
+    </div>
+    <div class="grid-4">
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Financial Corruption'">
+        <div class="card-icon red" style="font-size:24px;">💸</div>
+        <div><div style="font-weight:700;font-size:15px;">Financial Corruption</div><div style="font-size:12px;color:var(--text-muted);">Bribery, Embezzlement, Fraud</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Misuse of Power'">
+        <div class="card-icon red" style="font-size:24px;">👊</div>
+        <div><div style="font-weight:700;font-size:15px;">Misuse of Power</div><div style="font-size:12px;color:var(--text-muted);">Authority Abuse, Coercion</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Smuggling'">
+        <div class="card-icon" style="background:rgba(124,58,237,0.1);font-size:24px;">📦</div>
+        <div><div style="font-weight:700;font-size:15px;">Smuggling</div><div style="font-size:12px;color:var(--text-muted);">Illegal Goods, Border Crimes</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Institutional Corruption'">
+        <div class="card-icon" style="background:rgba(245,158,11,0.12);font-size:24px;">🏛️</div>
+        <div><div style="font-weight:700;font-size:15px;">Institutional Corruption</div><div style="font-size:12px;color:var(--text-muted);">Systemic Misconduct</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Not Accountable'">
+        <div class="card-icon red" style="font-size:24px;">🚫</div>
+        <div><div style="font-weight:700;font-size:15px;">Lack of Accountability</div><div style="font-size:12px;color:var(--text-muted);">Officials Not Answerable</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Unethical Misbehavior'">
+        <div class="card-icon red" style="font-size:24px;">😠</div>
+        <div><div style="font-weight:700;font-size:15px;">Unethical Misbehavior</div><div style="font-size:12px;color:var(--text-muted);">Harassment, Discrimination</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Drug Trafficking'">
+        <div class="card-icon" style="background:rgba(124,58,237,0.1);font-size:24px;">💊</div>
+        <div><div style="font-weight:700;font-size:15px;">Drug Trafficking</div><div style="font-size:12px;color:var(--text-muted);">Illegal Drugs, Distribution</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);border-left:4px solid var(--crimson);" onclick="window.location.href='complaint.html?cat=Human Trafficking'">
+        <div class="card-icon" style="background:rgba(124,58,237,0.1);font-size:24px;">⛓️</div>
+        <div><div style="font-weight:700;font-size:15px;">Human Trafficking</div><div style="font-size:12px;color:var(--text-muted);">Exploitation, Illegal Movement</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);" onclick="window.location.href='complaint.html?cat=Infrastructure'">
+        <div class="card-icon blue" style="font-size:24px;">🏗️</div>
+        <div><div style="font-weight:700;font-size:15px;">Infrastructure</div><div style="font-size:12px;color:var(--text-muted);">Roads, Bridges, Buildings</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);" onclick="window.location.href='complaint.html?cat=Health Services'">
+        <div class="card-icon" style="background:rgba(239,68,68,0.1);font-size:24px;">🏥</div>
+        <div><div style="font-weight:700;font-size:15px;">Health Services</div><div style="font-size:12px;color:var(--text-muted);">Hospitals, Medicine, Clinics</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);" onclick="window.location.href='complaint.html?cat=Water & Sanitation'">
+        <div class="card-icon" style="background:rgba(6,182,212,0.1);font-size:24px;">💧</div>
+        <div><div style="font-weight:700;font-size:15px;">Water & Sanitation</div><div style="font-size:12px;color:var(--text-muted);">Drinking Water, Sewage</div></div>
+      </div>
+      <div class="card" style="padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--transition);" onclick="window.location.href='complaint.html'">
+        <div class="card-icon" style="background:rgba(139,92,246,0.1);font-size:24px;">➕</div>
+        <div><div style="font-weight:700;font-size:15px;">30+ More Categories</div><div style="font-size:12px;color:var(--text-muted);">Electricity, Security, Agriculture…</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+
+<section class="section">
+  <div class="container">
+    <div class="card" style="background:linear-gradient(135deg,var(--blue),var(--blue-light));color:white;text-align:center;padding:48px 32px;border:none;">
+      <h2 style="font-size:28px;font-weight:800;margin-bottom:12px;">Support Nepal's Development</h2>
+      <p style="opacity:.85;margin-bottom:28px;font-size:15px;">Your donation helps improve services across all 77 districts. Every contribution makes a difference.</p>
+      <a href="donate.html" class="btn" style="background:var(--gold);color:#333;font-weight:700;font-size:16px;padding:14px 32px;">💛 Make a Donation</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">🇳🇵 Save Nepal From Corruption</div>
+        <p class="footer-desc">A secure, citizen-facing platform for reporting corruption, illegal activities, and civic issues directly from all 7 provinces and 77 districts of Nepal.</p>
+      </div>
+      <div>
+        <div class="footer-heading">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="complaint.html">Submit Issue</a></li>
+          <li><a href="track.html">Track Issue</a></li>
+          <li><a href="donate.html">Donate</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Provinces</div>
+        <ul class="footer-links">
+          <li><a href="#">Koshi</a></li>
+          <li><a href="#">Madhesh</a></li>
+          <li><a href="#">Bagmati</a></li>
+          <li><a href="#">Gandaki</a></li>
+          <li><a href="#">Lumbini</a></li>
+          <li><a href="#">Karnali</a></li>
+          <li><a href="#">Sudurpashchim</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><a href="#">Toll Free: 1111</a></li>
+          <li><a href="#">info@nepalcivic.gov.np</a></li>
+          <li><a href="admin.html">Admin Login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Save Nepal From Corruption. All rights reserved.</span>
+      <span>बनाइएको नेपाली नागरिकहरूका लागि 🇳🇵</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/nepal-data.js"></script>
+<script>
+  // Province grid
+  const provinces = Object.keys(NEPAL_DATA);
+  const provinceNums = ['I','II','III','IV','V','VI','VII'];
+  const grid = document.getElementById('province-grid');
+  provinces.forEach((p, i) => {
+    const d = NEPAL_DATA[p];
+    const count = Object.keys(d.districts).length;
+    grid.innerHTML += `
+      <div class="province-card" onclick="window.location.href='complaint.html?province=${encodeURIComponent(p)}'">
+        <div class="province-num">P${i+1}</div>
+        <div class="province-name">${p}</div>
+        <div class="province-meta">${count} Districts</div>
+      </div>`;
+  });
+
+  // Fetch complaint stats
+  fetch('/api/check-status/DUMMY').catch(() => {});
+  fetch('/api/complaints', { headers: { 'x-admin-password': '' } })
+    .then(r => r.json()).then(d => {
+      if (Array.isArray(d)) {
+        document.getElementById('total-complaints').textContent = d.length;
+        document.getElementById('resolved-complaints').textContent = d.filter(c => c.status === 'Resolved').length;
+      }
+    }).catch(() => {});
+</script>
+</body>
+</html>
