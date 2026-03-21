@@ -5,4 +5,5 @@ Disallow: /data/
 Disallow: /admin.html
 Disallow: /*?cat=*
 
-Sitemap: https://www.savenepalfromcorruption.com/sitemap.xml
+# Update this URL when deployed to production
+# Sitemap: https://www.savenepalfromcorruption.com/sitemap.xml
